@@ -1,4 +1,5 @@
 use crate::blocks::Block;
+use crate::validators::*;
 
 use serde::Serialize;
 use slack_messaging_derive::Builder;
@@ -59,16 +60,13 @@ use slack_messaging_derive::Builder;
 /// ```
 #[derive(Debug, Clone, Serialize, PartialEq, Builder)]
 pub struct Attachment {
-    /// Hex color code for the left sidebar (e.g., `#e74c3c`).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) color: Option<String>,
 
-    /// Block Kit blocks rendered inside this attachment.
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[builder(push_item = "block")]
+    #[builder(push_item = "block", validate("list::max_item_50"))]
     pub(crate) blocks: Option<Vec<Block>>,
 
-    /// Fallback text shown in notifications and screen readers.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) fallback: Option<String>,
 }
